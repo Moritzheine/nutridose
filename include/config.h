@@ -2,7 +2,7 @@
 
 #define NUTRIDOSE_VERSION "1.0.0"
 #define NUM_TOTAL_PUMPS 5
-#define MAX_PUMP_RUN_TIME_MS 30000
+#define MAX_PUMP_RUN_TIME_MS 2 * 60 * 1000
 
 // ESP32-C3 Pin Definitions
 // Input Pins (Rotary Encoder)
@@ -24,4 +24,4 @@
 // UI Configuration
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
-#define MENU_TIMEOUT_MS 30000
+#define MENU_TIMEOUT_MS 5 * 60 * 1000

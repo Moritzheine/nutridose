@@ -40,7 +40,7 @@ bool PumpDriver::startPump(uint8_t pump_id)
     pump_states_[pump_id] = true;
     pump_start_times_[pump_id] = millis();
 
-    Logger::info("Started pump " + String(pump_id) + " (" + PUMP_NAMES[pump_id] + ")");
+    Logger::info("Started pump " + String(pump_id) + " (" + PUMP_NAMES[pump_id] + ") on pin " + String(PUMP_PINS[pump_id]));
     return true;
 }
 

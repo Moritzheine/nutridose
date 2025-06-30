@@ -18,6 +18,6 @@ public:
     static void showComplete();
 
 private:
-    static const String main_menu_[4];
+    static const String main_menu_[5]; // Extended to 5 items
     static const String fertilizers_[4];
 };

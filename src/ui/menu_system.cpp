@@ -1,10 +1,11 @@
 #include "menu_system.h"
 #include "hardware/display.h"
 
-// Static menu arrays
-const String Menu::main_menu_[4] = {
+// Static menu arrays - Extended main menu
+const String Menu::main_menu_[5] = {
     "Manual Dose",
     "Profiles",
+    "Calibration",
     "Settings",
     "About"};
 
@@ -40,7 +41,7 @@ uint8_t Menu::adjustValue(uint8_t current, uint8_t min_val, uint8_t max_val, boo
 
 void Menu::showMainMenu(uint8_t selected)
 {
-    display.showMenu("NutriDose v1.0", main_menu_, 4, selected);
+    display.showMenu("NutriDose v1.0", main_menu_, 5, selected);
 }
 
 void Menu::showFertilizerSelect(uint8_t selected)

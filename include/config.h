@@ -4,7 +4,7 @@
 #define NUM_TOTAL_PUMPS 5
 #define MAX_PUMP_RUN_TIME_MS 30000
 
-// ESP32-C3 Pin Definitions - Updated for actual hardware
+// ESP32-C3 Pin Definitions
 // Input Pins (Rotary Encoder)
 #define ENCODER_CLK_PIN 0 // CLK
 #define ENCODER_DT_PIN 1  // DT
@@ -14,7 +14,7 @@
 #define DISPLAY_SDA_PIN 3 // SDA
 #define DISPLAY_SCL_PIN 4 // SCL
 
-// Pump Control Pins (moved to avoid conflicts)
+// Pump Control Pins
 #define PUMP_1_NPK_BASE_PIN 5 // GPIO5  - NPK Base fertilizer
 #define PUMP_2_MICRO_PIN 6    // GPIO6  - Micro nutrients
 #define PUMP_3_PH_DOWN_PIN 7  // GPIO7  - pH Down
@@ -25,7 +25,3 @@
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
 #define MENU_TIMEOUT_MS 30000
-
-// External declarations (defined in main.cpp)
-extern const uint8_t PUMP_PINS[5];
-extern const char *PUMP_NAMES[5];

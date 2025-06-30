@@ -36,7 +36,7 @@ void Input::update()
     long newPos = encoder_->getPosition();
     if (newPos != last_encoder_pos_)
     {
-        if (newPos > last_encoder_pos_)
+        if (newPos < last_encoder_pos_)
         {
             last_event_ = InputEvent::ENCODER_UP;
         }

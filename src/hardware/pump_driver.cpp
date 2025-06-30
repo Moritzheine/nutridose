@@ -1,6 +1,21 @@
 #include "pump_driver.h"
 #include "utils/logger.h"
 
+// Static member definitions
+const uint8_t PumpDriver::PUMP_PINS[5] = {
+    PUMP_1_NPK_BASE_PIN,
+    PUMP_2_MICRO_PIN,
+    PUMP_3_PH_DOWN_PIN,
+    PUMP_4_BLOOM_PIN,
+    PUMP_5_WATER_PIN};
+
+const char *PumpDriver::PUMP_NAMES[5] = {
+    "NPK Base",
+    "Micro",
+    "pH Down",
+    "Bloom",
+    "Water"};
+
 void PumpDriver::begin()
 {
     Logger::info("Initializing pumps...");

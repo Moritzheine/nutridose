@@ -2,7 +2,7 @@
 #include "config.h"
 #include "hardware/pump_driver.h"
 #include "core/calibration.h"
-#include "ui/ui_controller.h"
+#include "ui/screen_manager.h"
 #include "utils/logger.h"
 
 PumpDriver pumpDriver;
@@ -16,10 +16,10 @@ void setup()
   pumpDriver.begin();
   calibration.begin();
 
-  // Initialize UI system
-  uiController.begin();
+  // Initialize Screen Manager
+  screenManager.begin();
 
-  Logger::println("System ready - UI & Calibration active");
+  Logger::println("System ready - Modular UI active");
 }
 
 void loop()
@@ -27,9 +27,9 @@ void loop()
   // Update pump safety checks
   pumpDriver.update();
 
-  // Update UI and handle input
-  uiController.update();
+  // Update Screen Manager
+  screenManager.update();
 
-  // Small delay for stability (non-blocking)
+  // Small delay for stability
   delay(10);
 }

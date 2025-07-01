@@ -12,14 +12,17 @@ public:
     void clear();
     void show();
 
-    // Simple text functions
+    // Text functions
     void printLine(uint8_t line, const String &text);
     void printCenter(uint8_t y, const String &text);
 
-    // Menu display
+    // UI elements
     void showMenu(const String &title, const String items[], uint8_t count, uint8_t selected);
     void showValue(const String &label, uint8_t value, const String &unit);
     void showProgress(const String &title, uint8_t percent);
+
+    // Direct drawing access (for custom screens)
+    Adafruit_SSD1306 *getOled() { return &oled_; }
 
 private:
     Adafruit_SSD1306 oled_;

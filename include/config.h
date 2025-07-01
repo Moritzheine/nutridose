@@ -1,8 +1,11 @@
 #pragma once
 
+// Store strings in flash memory (ESP32 PROGMEM)
+#define PROGMEM_STRING(name, value) const char name[] PROGMEM = value
+
 #define NUTRIDOSE_VERSION "1.0.0"
 #define NUM_TOTAL_PUMPS 5
-#define MAX_PUMP_RUN_TIME_MS 2 * 60 * 1000
+#define MAX_PUMP_RUN_TIME_MS 2 * 60 * 1000UL
 
 // ESP32-C3 Pin Definitions
 // Input Pins (Rotary Encoder)
@@ -15,13 +18,16 @@
 #define DISPLAY_SCL_PIN 4 // SCL
 
 // Pump Control Pins
-#define PUMP_1_NPK_BASE_PIN 5 // GPIO5  - NPK Base fertilizer
-#define PUMP_2_MICRO_PIN 6    // GPIO6  - Micro nutrients
-#define PUMP_3_PH_DOWN_PIN 7  // GPIO7  - pH Down
-#define PUMP_4_BLOOM_PIN 8    // GPIO8  - Bloom booster
-#define PUMP_5_WATER_PIN 9    // GPIO9  - Water/Flush
+#define PUMP_1_NPK_BASE_PIN 5 // GPIO5 - NPK Base fertilizer
+#define PUMP_2_MICRO_PIN 6    // GPIO6 - Micro nutrients
+#define PUMP_3_PH_DOWN_PIN 7  // GPIO7 - pH Down
+#define PUMP_4_BLOOM_PIN 8    // GPIO8 - Bloom booster
+#define PUMP_5_WATER_PIN 9    // GPIO9 - Water/Flush
 
 // UI Configuration
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
-#define MENU_TIMEOUT_MS 5 * 60 * 1000
+#define MENU_TIMEOUT_MS 5 * 60 * 1000UL
+
+// Memory optimization
+#define USE_PROGMEM 1

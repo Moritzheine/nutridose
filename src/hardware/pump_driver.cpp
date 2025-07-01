@@ -1,20 +1,6 @@
 #include "pump_driver.h"
+#include "core/fertilizer_config.h"
 #include "utils/logger.h"
-
-// Static member definitions
-const uint8_t PumpDriver::PUMP_PINS[5] = {
-    PUMP_1_NPK_BASE_PIN,
-    PUMP_2_MICRO_PIN,
-    PUMP_3_PH_DOWN_PIN,
-    PUMP_4_BLOOM_PIN,
-    PUMP_5_WATER_PIN};
-
-const char *PumpDriver::PUMP_NAMES[5] = {
-    "NPK Base",
-    "Micro",
-    "pH Down",
-    "Bloom",
-    "Water"};
 
 void PumpDriver::begin()
 {
@@ -22,8 +8,9 @@ void PumpDriver::begin()
 
     for (uint8_t i = 0; i < NUM_TOTAL_PUMPS; i++)
     {
-        pinMode(PUMP_PINS[i], OUTPUT);
-        digitalWrite(PUMP_PINS[i], LOW);
+        const auto &fert = fertConfig.get(i);
+        pinMode(fert.pin, OUTPUT);
+        digitalWrite(fert.pin, LOW);
         pump_states_[i] = false;
         pump_start_times_[i] = 0;
     }
@@ -36,11 +23,12 @@ bool PumpDriver::startPump(uint8_t pump_id)
     if (pump_id >= NUM_TOTAL_PUMPS)
         return false;
 
-    digitalWrite(PUMP_PINS[pump_id], HIGH);
+    const auto &fert = fertConfig.get(pump_id);
+    digitalWrite(fert.pin, HIGH);
     pump_states_[pump_id] = true;
     pump_start_times_[pump_id] = millis();
 
-    Logger::info("Started pump " + String(pump_id) + " (" + PUMP_NAMES[pump_id] + ") on pin " + String(PUMP_PINS[pump_id]));
+    Logger::info("Started pump " + String(pump_id) + " (" + fert.name + ") on pin " + String(fert.pin));
     return true;
 }
 
@@ -49,11 +37,12 @@ bool PumpDriver::stopPump(uint8_t pump_id)
     if (pump_id >= NUM_TOTAL_PUMPS)
         return false;
 
-    digitalWrite(PUMP_PINS[pump_id], LOW);
+    const auto &fert = fertConfig.get(pump_id);
+    digitalWrite(fert.pin, LOW);
     pump_states_[pump_id] = false;
     pump_start_times_[pump_id] = 0;
 
-    Logger::info("Stopped pump " + String(pump_id) + " (" + PUMP_NAMES[pump_id] + ")");
+    Logger::info("Stopped pump " + String(pump_id) + " (" + fert.name + ")");
     return true;
 }
 
@@ -95,7 +84,8 @@ void PumpDriver::printStatus()
     Logger::println("\nPump Status:");
     for (uint8_t i = 0; i < NUM_TOTAL_PUMPS; i++)
     {
-        String status = String(i) + " " + PUMP_NAMES[i] + ": " +
+        const auto &fert = fertConfig.get(i);
+        String status = String(i) + " " + fert.name + ": " +
                         (pump_states_[i] ? "ON" : "OFF");
         Logger::println(status);
     }

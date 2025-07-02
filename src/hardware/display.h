@@ -16,21 +16,25 @@ public:
     void printLine(uint8_t line, const String &text);
     void printCenter(uint8_t y, const String &text);
 
-    // UI elements
+    // VEREINFACHTE UI - NUR BESTEHENDE + EINE NEUE FUNKTION
     void showMenu(const String &title, const String items[], uint8_t count, uint8_t selected);
     void showValue(const String &label, float value, const String &unit);
     void showProgress(const String &title, uint8_t percent);
-
-    // Profile specific displays
     void showProfileList(const String profiles[], uint8_t selected);
-    void showNavigation(const String &left, const String &right, bool rightSelected);
 
-    // Direct drawing access (for custom screens)
+    // EINE NEUE: Konsistente Footer-Anweisungen
+    void showFooter(const String &instruction);
+
+    // Direct drawing access
     Adafruit_SSD1306 *getOled() { return &oled_; }
 
 private:
     Adafruit_SSD1306 oled_;
+
+    // Consistent UI elements
+    void drawNavFooter(const String &instruction);
+    void drawDualNavButtons(const String &left, const String &right, bool right_selected);
+    void drawProgressBar(uint8_t y, uint8_t percent);
 };
 
-// Global display object
 extern Display display;

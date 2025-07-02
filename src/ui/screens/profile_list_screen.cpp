@@ -11,11 +11,6 @@ void ProfileListScreen::enter()
     refreshDisplay();
 }
 
-void ProfileListScreen::update()
-{
-    // Static display, no update needed
-}
-
 void ProfileListScreen::refreshDisplay()
 {
     String profiles[4];
@@ -28,6 +23,7 @@ void ProfileListScreen::refreshDisplay()
 
 void ProfileListScreen::handleInput(InputEvent event)
 {
+    // EINFACHE MENU-NAVIGATION
     if (event == InputEvent::ENCODER_UP)
     {
         manager_->profile_ctx.selected_profile = navigate(manager_->profile_ctx.selected_profile, 4, true);
@@ -46,21 +42,12 @@ void ProfileListScreen::handleInput(InputEvent event)
         }
         else
         {
-            // Empty slot - go to create
             manager_->switchTo(ScreenType::PROFILE_CREATE);
         }
     }
     else if (event == InputEvent::BUTTON_HOLD)
     {
-        if (profileManager.isProfileActive(manager_->profile_ctx.selected_profile))
-        {
-            // Delete confirmation
-            manager_->switchTo(ScreenType::PROFILE_DELETE_CONFIRM);
-        }
-        else
-        {
-            // Back to menu
-            manager_->switchTo(ScreenType::MENU);
-        }
+        // Hold = zurück zum Menü (konsistent)
+        manager_->switchTo(ScreenType::MENU);
     }
 }

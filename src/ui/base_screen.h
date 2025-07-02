@@ -14,7 +14,6 @@ enum class ScreenType
     CALIBRATION_SELECT,
     CALIBRATION_RUN,
     CALIBRATION_INPUT,
-    // Profile screens
     PROFILE_LIST,
     PROFILE_DETAIL,
     PROFILE_WATER,
@@ -24,7 +23,7 @@ enum class ScreenType
     PROFILE_CREATE
 };
 
-class ScreenManager; // Forward declaration
+class ScreenManager;
 
 class BaseScreen
 {
@@ -33,12 +32,12 @@ public:
     virtual ~BaseScreen() = default;
 
     virtual void enter() = 0;
-    virtual void update() {};  // Called every loop iteration
-    virtual void refresh() {}; // Optional, called when screen needs to be redrawn
+    virtual void update() {};
+    virtual void refresh() {};
     virtual void handleInput(InputEvent event) = 0;
     virtual void exit() {}
 
-    // Navigation helpers
+    // VEREINFACHTE NAVIGATION - NUR EINE METHODE FÜR ALLES
     static uint8_t navigate(uint8_t current, uint8_t max_items, bool up)
     {
         if (up)
@@ -51,19 +50,7 @@ public:
         }
     }
 
-    static uint8_t adjustValue(uint8_t current, uint8_t min_val, uint8_t max_val, bool up)
-    {
-        if (up)
-        {
-            return (current >= max_val) ? max_val : current + 1;
-        }
-        else
-        {
-            return (current <= min_val) ? min_val : current - 1;
-        }
-    }
-
-    static float adjustValueFloat(float current, float min_val, float max_val, float step, bool up)
+    static float adjustValue(float current, float min_val, float max_val, float step, bool up)
     {
         if (up)
         {

@@ -1,12 +1,9 @@
 #include "display.h"
 #include <Wire.h>
 
-// Global display instance
 Display display;
 
-Display::Display() : oled_(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, -1)
-{
-}
+Display::Display() : oled_(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, -1) {}
 
 void Display::begin()
 {
@@ -50,6 +47,7 @@ void Display::printCenter(uint8_t y, const String &text)
     oled_.print(text);
 }
 
+// NAVIGATION UI IMPLEMENTATIONS
 void Display::showMenu(const String &title, const String items[], uint8_t count, uint8_t selected)
 {
     clear();
@@ -85,28 +83,6 @@ void Display::showMenu(const String &title, const String items[], uint8_t count,
     show();
 }
 
-void Display::showValue(const String &label, float value, const String &unit)
-{
-    clear();
-
-    // Label
-    oled_.setTextSize(1);
-    printCenter(10, label);
-
-    // Large value
-    oled_.setTextSize(2);
-    int decimals = 1;
-
-    String valueStr = String(value, decimals) + unit;
-    printCenter(30, valueStr);
-
-    // Instructions
-    oled_.setTextSize(1);
-    printCenter(55, "Turn=Adjust Click=OK");
-
-    show();
-}
-
 void Display::showProgress(const String &title, uint8_t percent)
 {
     clear();
@@ -138,6 +114,26 @@ void Display::showProgress(const String &title, uint8_t percent)
     show();
 }
 
+void Display::showValue(const String &label, float value, const String &unit)
+{
+    clear();
+
+    // Label
+    oled_.setTextSize(1);
+    printCenter(10, label);
+
+    // Large value
+    oled_.setTextSize(2);
+    int decimals = 1;
+
+    String valueStr = String(value, decimals) + unit;
+    printCenter(30, valueStr);
+
+    // Reset text size
+    oled_.setTextSize(1);
+
+    show();
+}
 void Display::showProfileList(const String profiles[], uint8_t selected)
 {
     clear();
@@ -195,48 +191,10 @@ void Display::showProfileList(const String profiles[], uint8_t selected)
     show();
 }
 
-void Display::showNavigation(const String &left, const String &right, bool rightSelected)
+// NEUE FUNKTION: Konsistente Footer
+void Display::showFooter(const String &instruction)
 {
-    // Draw navigation bar at bottom
-    uint8_t navY = 48;
-    uint8_t boxHeight = 14;
-    uint8_t boxWidth = 50;
-    uint8_t spacing = 10;
-
-    // Left button
-    uint8_t leftX = spacing;
-    if (!rightSelected)
-    {
-        oled_.fillRect(leftX - 2, navY - 2, boxWidth + 4, boxHeight + 4, SSD1306_WHITE);
-        oled_.setTextColor(SSD1306_BLACK);
-    }
-    else
-    {
-        oled_.drawRect(leftX - 2, navY - 2, boxWidth + 4, boxHeight + 4, SSD1306_WHITE);
-    }
-
-    int16_t x1, y1;
-    uint16_t w, h;
-    oled_.getTextBounds(left, 0, 0, &x1, &y1, &w, &h);
-    oled_.setCursor(leftX + (boxWidth - w) / 2, navY + 3);
-    oled_.print(left);
-
-    // Right button
-    uint8_t rightX = DISPLAY_WIDTH - boxWidth - spacing;
-    if (!rightSelected)
-    {
-        oled_.setTextColor(SSD1306_WHITE);
-    }
-    else
-    {
-        oled_.fillRect(rightX - 2, navY - 2, boxWidth + 4, boxHeight + 4, SSD1306_WHITE);
-        oled_.setTextColor(SSD1306_BLACK);
-    }
-
-    oled_.drawRect(rightX - 2, navY - 2, boxWidth + 4, boxHeight + 4, SSD1306_WHITE);
-    oled_.getTextBounds(right, 0, 0, &x1, &y1, &w, &h);
-    oled_.setCursor(rightX + (boxWidth - w) / 2, navY + 3);
-    oled_.print(right);
-
-    oled_.setTextColor(SSD1306_WHITE);
+    uint8_t y = 56;
+    oled_.drawLine(0, y - 2, DISPLAY_WIDTH - 1, y - 2, SSD1306_WHITE);
+    printCenter(y, instruction);
 }

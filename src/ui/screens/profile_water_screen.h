@@ -7,6 +7,6 @@ public:
     ProfileWaterScreen(ScreenManager *manager) : BaseScreen(manager) {}
 
     void enter() override;
-    void update() override;
+    void update() override {}
     void handleInput(InputEvent event) override;
 };

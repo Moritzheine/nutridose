@@ -6,7 +6,6 @@
 void DoseAmountScreen::enter()
 {
     enter_time_ = millis();
-    nav_selection_ = true; // Default to value adjustment
     refresh();
 }
 
@@ -14,67 +13,25 @@ void DoseAmountScreen::refresh()
 {
     const auto &fert = manager_->dose_ctx.nutrients_only ? fertConfig.getNutrient(manager_->dose_ctx.fertilizer_index) : fertConfig.get(manager_->dose_ctx.fertilizer_index);
 
-    display.clear();
-
-    // Title
-    display.printCenter(10, fert.name);
-
-    // Value
-    // display.setTextSize(2);
-    String valueStr = (manager_->dose_ctx.amount_ml == (int)manager_->dose_ctx.amount_ml) ? String((int)manager_->dose_ctx.amount_ml) : String(manager_->dose_ctx.amount_ml, 1);
-    display.printCenter(25, valueStr + " ml");
-    // display.setTextSize(1);
-
-    // Navigation
-    display.showNavigation("< Back", "Next >", nav_selection_);
-
-    display.show();
+    display.showValue(fert.name, manager_->dose_ctx.amount_ml, "ml");
 }
 
 void DoseAmountScreen::handleInput(InputEvent event)
 {
+    // EINFACHE NAVIGATION - EIN PATTERN FÜR ALLES
     if (event == InputEvent::ENCODER_UP)
     {
-        if (nav_selection_)
-        {
-            // Adjust value
-            manager_->dose_ctx.amount_ml = adjustValueFloat(manager_->dose_ctx.amount_ml, 0.1, 50.0, 0.1, true);
-            refresh();
-        }
-        else
-        {
-            // Switch to value adjustment
-            nav_selection_ = true;
-            refresh();
-        }
+        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 0.1f, 50.0f, 0.1f, true);
+        refresh();
     }
     else if (event == InputEvent::ENCODER_DOWN)
     {
-        if (nav_selection_)
-        {
-            // Adjust value
-            manager_->dose_ctx.amount_ml = adjustValueFloat(manager_->dose_ctx.amount_ml, 0.1, 50.0, 0.1, false);
-            refresh();
-        }
-        else
-        {
-            // Already on back button
-            nav_selection_ = false;
-            refresh();
-        }
+        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 0.1f, 50.0f, 0.1f, false);
+        refresh();
     }
     else if (event == InputEvent::BUTTON_CLICK)
     {
-        if (nav_selection_)
-        {
-            // Next - go to confirm
-            manager_->switchTo(ScreenType::DOSE_CONFIRM);
-        }
-        else
-        {
-            // Back
-            manager_->switchTo(ScreenType::DOSE_SELECT);
-        }
+        manager_->switchTo(ScreenType::DOSE_CONFIRM);
     }
     else if (event == InputEvent::BUTTON_HOLD)
     {

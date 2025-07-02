@@ -12,11 +12,7 @@ public:
     void resetToDefaults();
 
 private:
-    float pump_factors_[NUM_TOTAL_PUMPS] = {1.0, 1.0, 1.0, 1.0, 1.0};
     static const uint32_t DEFAULT_ML_PER_SEC = 3; // 3ml per second base
-
-    void loadFromStorage();
-    void saveToStorage();
 };
 
 extern Calibration calibration;

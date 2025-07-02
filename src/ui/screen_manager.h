@@ -21,8 +21,8 @@ struct CalibrationContext
     // NEW: For offset calibration
     uint8_t offset_repetitions = 10;
     uint8_t current_repetition = 0;
-    float offset_target_ml = 2.0;
-    float offset_actual_total = 70.0; // Expected total: 50ml base + 10x2ml = 70ml
+    float offset_target_ml = 1.0;     // Changed from 2.0 to 1.0ml
+    float offset_actual_total = 60.0; // Expected total: 50ml base + 10x1ml = 60ml
 
     // NEW: Feedback for user
     uint16_t old_offset_ms = 0;

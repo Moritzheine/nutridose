@@ -9,7 +9,7 @@ struct AppData
     float pump_factors[NUM_TOTAL_PUMPS] = {1.0, 1.0, 1.0, 1.0, 1.0};
 
     // NEW: Small volume offset calibration (in milliseconds)
-    uint16_t pump_offset_ms[NUM_TOTAL_PUMPS] = {650, 650, 650, 650, 650};
+    uint16_t pump_offset_ms[NUM_TOTAL_PUMPS] = {0, 0, 0, 0, 0};
 
     // Profile data
     struct ProfileData

@@ -213,7 +213,7 @@ void CalibrationOffsetScreen::update()
             // Show progress
             uint8_t progress = (elapsed * 100) / target_time;
             display.clear();
-            display.printCenter(5, "Adding 10x 2ml");
+            display.printCenter(5, "Adding 10x 1ml");
             display.printCenter(15, "Dose " + String(manager_->cal_ctx.current_repetition + 1) + "/10");
             display.printCenter(30, String(progress) + "%");
             display.printCenter(45, "Pumping...");
@@ -245,9 +245,9 @@ void CalibrationOffsetScreen::handleInput(InputEvent event)
         // Total volume input
         if (event == InputEvent::ENCODER_UP)
         {
-            manager_->cal_ctx.offset_actual_total += 0.5; // 0.5ml steps for easier reading
-            if (manager_->cal_ctx.offset_actual_total > 100.0)
-                manager_->cal_ctx.offset_actual_total = 100.0;
+            manager_->cal_ctx.offset_actual_total += 0.5;     // 0.5ml steps for easier reading
+            if (manager_->cal_ctx.offset_actual_total > 80.0) // Reasonable upper bound
+                manager_->cal_ctx.offset_actual_total = 80.0;
             refreshDisplay();
         }
         else if (event == InputEvent::ENCODER_DOWN)
@@ -260,12 +260,12 @@ void CalibrationOffsetScreen::handleInput(InputEvent event)
         else if (event == InputEvent::BUTTON_CLICK)
         {
             // Calculate CUMULATIVE offset correction
-            float expected_total = 50.0 + (manager_->cal_ctx.offset_target_ml * manager_->cal_ctx.offset_repetitions); // 70ml expected
+            float expected_total = 50.0 + (manager_->cal_ctx.offset_target_ml * manager_->cal_ctx.offset_repetitions); // 60ml expected
             float actual_total = manager_->cal_ctx.offset_actual_total;
 
-            // The additional volume difference (should be ~20ml, actual - 50ml base)
+            // The additional volume difference (should be ~10ml, actual - 50ml base)
             float actual_additional = actual_total - 50.0;
-            float expected_additional = manager_->cal_ctx.offset_target_ml * manager_->cal_ctx.offset_repetitions; // 20ml
+            float expected_additional = manager_->cal_ctx.offset_target_ml * manager_->cal_ctx.offset_repetitions; // 10ml
 
             // Difference per small dose
             float difference_per_dose = (expected_additional - actual_additional) / manager_->cal_ctx.offset_repetitions;
@@ -318,7 +318,7 @@ void CalibrationOffsetScreen::refreshDisplay()
         // Countdown screen
         uint32_t remaining = (next_auto_start_ > millis()) ? (next_auto_start_ - millis()) / 1000 + 1 : 0;
         display.printCenter(2, "Offset Calibration");
-        display.printCenter(15, "Adding 10x 2ml");
+        display.printCenter(15, "Adding 10x 1ml");
         display.printCenter(25, "automatically...");
         if (remaining > 0)
         {
@@ -334,7 +334,7 @@ void CalibrationOffsetScreen::refreshDisplay()
     {
         // Total volume input
         display.printCenter(2, "Total Volume?");
-        display.printCenter(12, "Expected: ~70ml");
+        display.printCenter(12, "Expected: ~60ml");
         display.printLine(3, "Actual:");
         display.printCenter(30, String(manager_->cal_ctx.offset_actual_total, 1) + "ml");
         display.printCenter(50, "Click=Save Hold=Skip");
@@ -344,7 +344,7 @@ void CalibrationOffsetScreen::refreshDisplay()
         // Waiting for next dose
         display.printCenter(10, "Next dose...");
         display.printCenter(25, String(manager_->cal_ctx.current_repetition + 1) + " of 10");
-        display.printCenter(40, "2ml target");
+        display.printCenter(40, "1ml target");
     }
 
     display.show();

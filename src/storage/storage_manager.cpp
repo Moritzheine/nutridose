@@ -46,17 +46,37 @@ void StorageManager::loadFromFlash()
 
     // Check version
     uint16_t version;
-    if (file.read((uint8_t *)&version, sizeof(version)) != sizeof(version) || version != data_.version)
+    if (file.read((uint8_t *)&version, sizeof(version)) != sizeof(version))
     {
         file.close();
-        Logger::info("Storage version mismatch, using defaults");
+        Logger::info("Storage corrupted, using defaults");
         return;
     }
 
-    // Read complete data structure
-    if (file.read((uint8_t *)&data_, sizeof(data_)) == sizeof(data_))
+    if (version == 1)
     {
-        Logger::info("Storage data loaded");
+        // Migration from v1 to v2: read old data, keep offset defaults
+        Logger::info("Migrating storage from v1 to v2");
+        // Reset file position and read old structure size
+        file.seek(0);
+        // Read what we can, offsets will remain at default 0
+        size_t old_size = sizeof(AppData) - sizeof(data_.pump_offset_ms) - sizeof(data_.version);
+        file.read((uint8_t *)&data_, old_size);
+        data_.version = 2; // Update version
+        saveToFlash();     // Save migrated data
+    }
+    else if (version == 2)
+    {
+        // Current version: read complete data structure
+        file.seek(0);
+        if (file.read((uint8_t *)&data_, sizeof(data_)) == sizeof(data_))
+        {
+            Logger::info("Storage data loaded");
+        }
+    }
+    else
+    {
+        Logger::info("Unknown storage version, using defaults");
     }
 
     file.close();
@@ -91,6 +111,24 @@ float StorageManager::getCalibrationFactor(uint8_t pump_id)
     if (pump_id >= NUM_TOTAL_PUMPS)
         return 1.0;
     return data_.pump_factors[pump_id];
+}
+
+// NEW: OFFSET CALIBRATION METHODS
+void StorageManager::saveOffsetCalibration(uint8_t pump_id, uint16_t offset_ms)
+{
+    if (pump_id >= NUM_TOTAL_PUMPS)
+        return;
+
+    data_.pump_offset_ms[pump_id] = offset_ms;
+    saveToFlash();
+    Logger::info("Pump " + String(pump_id) + " offset: " + String(offset_ms) + "ms");
+}
+
+uint16_t StorageManager::getOffsetCalibration(uint8_t pump_id)
+{
+    if (pump_id >= NUM_TOTAL_PUMPS)
+        return 0;
+    return data_.pump_offset_ms[pump_id];
 }
 
 // PROFILE METHODS

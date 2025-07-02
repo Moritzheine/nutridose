@@ -8,6 +8,9 @@ struct AppData
     // Calibration data
     float pump_factors[NUM_TOTAL_PUMPS] = {1.0, 1.0, 1.0, 1.0, 1.0};
 
+    // NEW: Small volume offset calibration (in milliseconds)
+    uint16_t pump_offset_ms[NUM_TOTAL_PUMPS] = {650, 650, 650, 650, 650};
+
     // Profile data
     struct ProfileData
     {
@@ -20,7 +23,7 @@ struct AppData
     float last_doses[NUM_TOTAL_PUMPS] = {10.0, 5.0, 2.0, 8.0, 1000.0};
 
     // Data version for migration
-    uint16_t version = 1;
+    uint16_t version = 2; // Increased for offset calibration
 };
 
 class StorageManager
@@ -31,6 +34,10 @@ public:
     // CALIBRATION
     void saveCalibration(uint8_t pump_id, float factor);
     float getCalibrationFactor(uint8_t pump_id);
+
+    // NEW: Small volume offset calibration
+    void saveOffsetCalibration(uint8_t pump_id, uint16_t offset_ms);
+    uint16_t getOffsetCalibration(uint8_t pump_id);
 
     // PROFILES
     void saveProfile(uint8_t index, const float ratios[4]);

@@ -30,6 +30,7 @@ void ScreenManager::begin()
     screens_[(int)ScreenType::CALIBRATION_SELECT] = new CalibrationSelectScreen(this);
     screens_[(int)ScreenType::CALIBRATION_RUN] = new CalibrationRunScreen(this);
     screens_[(int)ScreenType::CALIBRATION_INPUT] = new CalibrationInputScreen(this);
+    screens_[(int)ScreenType::CALIBRATION_OFFSET] = new CalibrationOffsetScreen(this); // NEW
     screens_[(int)ScreenType::PROFILE_LIST] = new ProfileListScreen(this);
     screens_[(int)ScreenType::PROFILE_DETAIL] = new ProfileDetailScreen(this);
     screens_[(int)ScreenType::PROFILE_WATER] = new ProfileWaterScreen(this);

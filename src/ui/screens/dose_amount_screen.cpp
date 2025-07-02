@@ -21,12 +21,12 @@ void DoseAmountScreen::handleInput(InputEvent event)
     // EINFACHE NAVIGATION - EIN PATTERN FÜR ALLES
     if (event == InputEvent::ENCODER_UP)
     {
-        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 0.1f, 50.0f, 0.1f, true);
+        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 0.5f, 50.0f, 0.1f, true);
         refresh();
     }
     else if (event == InputEvent::ENCODER_DOWN)
     {
-        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 0.1f, 50.0f, 0.1f, false);
+        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 0.5f, 50.0f, 0.1f, false);
         refresh();
     }
     else if (event == InputEvent::BUTTON_CLICK)

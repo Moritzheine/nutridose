@@ -17,6 +17,17 @@ struct CalibrationContext
     uint8_t pump_index = 0;
     uint8_t actual_volume = 50;
     uint32_t start_time = 0;
+
+    // NEW: For offset calibration
+    uint8_t offset_repetitions = 10;
+    uint8_t current_repetition = 0;
+    float offset_target_ml = 2.0;
+    float offset_actual_total = 70.0; // Expected total: 50ml base + 10x2ml = 70ml
+
+    // NEW: Feedback for user
+    uint16_t old_offset_ms = 0;
+    int16_t correction_ms = 0;
+    uint16_t new_offset_ms = 0;
 };
 
 struct ProfileContext
@@ -50,7 +61,7 @@ public:
 
 private:
     BaseScreen *current_screen_ = nullptr;
-    BaseScreen *screens_[20]; // Increased for new screens
+    BaseScreen *screens_[21]; // Increased for offset calibration screen
     uint32_t last_activity_ = 0;
 
     void updateActivity();

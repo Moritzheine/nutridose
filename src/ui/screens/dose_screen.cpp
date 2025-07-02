@@ -10,9 +10,14 @@ extern PumpDriver pumpDriver;
 void DoseSelectScreen::enter()
 {
     enter_time_ = millis();
+    refresh();
+}
+
+void DoseSelectScreen::refresh()
+{
 
     uint8_t count = manager_->dose_ctx.nutrients_only ? fertConfig.getNutrientCount() : fertConfig.COUNT;
-    String items[5];
+    String items[count];
 
     for (uint8_t i = 0; i < count; i++)
     {
@@ -23,8 +28,6 @@ void DoseSelectScreen::enter()
     display.showMenu("Select Fertilizer", items, count, manager_->dose_ctx.fertilizer_index);
 }
 
-void DoseSelectScreen::update() {}
-
 void DoseSelectScreen::handleInput(InputEvent event)
 {
     uint8_t count = manager_->dose_ctx.nutrients_only ? fertConfig.getNutrientCount() : fertConfig.COUNT;
@@ -32,12 +35,12 @@ void DoseSelectScreen::handleInput(InputEvent event)
     if (event == InputEvent::ENCODER_UP)
     {
         manager_->dose_ctx.fertilizer_index = navigate(manager_->dose_ctx.fertilizer_index, count, true);
-        enter(); // Refresh display
+        refresh();
     }
     else if (event == InputEvent::ENCODER_DOWN)
     {
         manager_->dose_ctx.fertilizer_index = navigate(manager_->dose_ctx.fertilizer_index, count, false);
-        enter(); // Refresh display
+        refresh();
     }
     else if (event == InputEvent::BUTTON_CLICK)
     {
@@ -48,39 +51,6 @@ void DoseSelectScreen::handleInput(InputEvent event)
     else if (event == InputEvent::BUTTON_HOLD)
     {
         manager_->switchTo(ScreenType::MENU);
-    }
-}
-
-// --- DoseAmountScreen ---
-void DoseAmountScreen::enter()
-{
-    enter_time_ = millis();
-    const auto &fert = manager_->dose_ctx.nutrients_only ? fertConfig.getNutrient(manager_->dose_ctx.fertilizer_index) : fertConfig.get(manager_->dose_ctx.fertilizer_index);
-
-    display.showValue(fert.name, manager_->dose_ctx.amount_ml, "ml");
-}
-
-void DoseAmountScreen::update() {}
-
-void DoseAmountScreen::handleInput(InputEvent event)
-{
-    if (event == InputEvent::ENCODER_UP)
-    {
-        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 1, 50, true);
-        enter(); // Refresh display
-    }
-    else if (event == InputEvent::ENCODER_DOWN)
-    {
-        manager_->dose_ctx.amount_ml = adjustValue(manager_->dose_ctx.amount_ml, 1, 50, false);
-        enter(); // Refresh display
-    }
-    else if (event == InputEvent::BUTTON_CLICK)
-    {
-        manager_->switchTo(ScreenType::DOSE_CONFIRM);
-    }
-    else if (event == InputEvent::BUTTON_HOLD)
-    {
-        manager_->switchTo(ScreenType::DOSE_SELECT);
     }
 }
 
@@ -95,7 +65,11 @@ void DoseConfirmScreen::enter()
     display.printLine(2, "Fertilizer:");
     display.printLine(3, "  " + String(fert.name));
     display.printLine(4, "Amount:");
-    display.printLine(5, "  " + String(manager_->dose_ctx.amount_ml) + "ml");
+
+    // Format amount with 0.1ml precision
+    String amountStr = (manager_->dose_ctx.amount_ml == (int)manager_->dose_ctx.amount_ml) ? String((int)manager_->dose_ctx.amount_ml) : String(manager_->dose_ctx.amount_ml, 1);
+    display.printLine(5, "  " + amountStr + "ml");
+
     display.printCenter(55, "Click=Start Hold=Back");
     display.show();
 }

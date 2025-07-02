@@ -7,7 +7,7 @@
 struct DoseContext
 {
     uint8_t fertilizer_index = 0;
-    uint8_t amount_ml = 10;
+    float amount_ml = 10.0; // 0.1ml precision
     uint32_t start_time = 0;
     bool nutrients_only = true;
 };
@@ -17,6 +17,21 @@ struct CalibrationContext
     uint8_t pump_index = 0;
     uint8_t actual_volume = 50;
     uint32_t start_time = 0;
+};
+
+struct ProfileContext
+{
+    uint8_t selected_profile = 0; // 0-3 for A-D
+    uint16_t water_ml = 1000;     // Water amount (100ml steps)
+    uint8_t current_pump = 0;     // For sequential dosing
+    uint32_t start_time = 0;
+    uint16_t total_time_ms = 0;   // Total time for all pumps
+    uint16_t elapsed_time_ms = 0; // Elapsed time across all pumps
+
+    // For profile creation
+    uint8_t create_step = 0;                     // 0-3 for each fertilizer
+    float new_ratios[4] = {10.0, 5.0, 2.0, 8.0}; // Default values
+    bool nav_selection = true;                   // true = right button, false = left
 };
 
 class ScreenManager
@@ -30,11 +45,12 @@ public:
     // Shared data between screens
     DoseContext dose_ctx;
     CalibrationContext cal_ctx;
+    ProfileContext profile_ctx;
     uint8_t menu_selection = 0;
 
 private:
     BaseScreen *current_screen_ = nullptr;
-    BaseScreen *screens_[10];
+    BaseScreen *screens_[20]; // Increased for new screens
     uint32_t last_activity_ = 0;
 
     void updateActivity();

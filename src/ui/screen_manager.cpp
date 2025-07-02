@@ -1,9 +1,15 @@
 #include "screen_manager.h"
-#include "screens/main_screen.h"
 #include "screens/menu_screen.h"
 #include "screens/dose_screen.h"
+#include "screens/dose_amount_screen.h"
 #include "screens/calibration_screen.h"
 #include "screens/progress_screen.h"
+#include "screens/profile_list_screen.h"
+#include "screens/profile_detail_screen.h"
+#include "screens/profile_water_screen.h"
+#include "screens/profile_summary_screen.h"
+#include "screens/profile_dose_screen.h"
+#include "screens/profile_create_screen.h"
 #include "config.h"
 #include "utils/logger.h"
 
@@ -15,7 +21,6 @@ void ScreenManager::begin()
     input.begin();
 
     // Initialize all screens
-    screens_[(int)ScreenType::MAIN] = new MainScreen(this);
     screens_[(int)ScreenType::MENU] = new MenuScreen(this);
     screens_[(int)ScreenType::DOSE_SELECT] = new DoseSelectScreen(this);
     screens_[(int)ScreenType::DOSE_AMOUNT] = new DoseAmountScreen(this);
@@ -25,8 +30,15 @@ void ScreenManager::begin()
     screens_[(int)ScreenType::CALIBRATION_SELECT] = new CalibrationSelectScreen(this);
     screens_[(int)ScreenType::CALIBRATION_RUN] = new CalibrationRunScreen(this);
     screens_[(int)ScreenType::CALIBRATION_INPUT] = new CalibrationInputScreen(this);
+    screens_[(int)ScreenType::PROFILE_LIST] = new ProfileListScreen(this);
+    screens_[(int)ScreenType::PROFILE_DETAIL] = new ProfileDetailScreen(this);
+    screens_[(int)ScreenType::PROFILE_WATER] = new ProfileWaterScreen(this);
+    screens_[(int)ScreenType::PROFILE_SUMMARY] = new ProfileSummaryScreen(this);
+    screens_[(int)ScreenType::PROFILE_DOSE] = new ProfileDoseScreen(this);
+    screens_[(int)ScreenType::PROFILE_DELETE_CONFIRM] = new ProfileDeleteConfirmScreen(this);
+    screens_[(int)ScreenType::PROFILE_CREATE] = new ProfileCreateScreen(this);
 
-    switchTo(ScreenType::MAIN);
+    switchTo(ScreenType::MENU);
     Logger::info("Screen Manager initialized");
 }
 
@@ -73,7 +85,7 @@ void ScreenManager::switchTo(ScreenType type)
 
 void ScreenManager::returnToMain()
 {
-    switchTo(ScreenType::MAIN);
+    switchTo(ScreenType::MENU);
 }
 
 void ScreenManager::updateActivity()

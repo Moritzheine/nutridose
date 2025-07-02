@@ -2,17 +2,17 @@
 #include "ui/screen_manager.h"
 #include "hardware/display.h"
 
-static const String MAIN_MENU_ITEMS[5] = {
+static const int MENU_ITEM_COUNT = 3;
+static const String MAIN_MENU_ITEMS[MENU_ITEM_COUNT] = {
     "Manual Dose",
     "Profiles",
     "Calibration",
-    "Settings",
-    "About"};
+};
 
 void MenuScreen::enter()
 {
     enter_time_ = millis();
-    display.showMenu("NutriDose v1.0", MAIN_MENU_ITEMS, 5, manager_->menu_selection);
+    display.showMenu("NutriDose v1.0", MAIN_MENU_ITEMS, MENU_ITEM_COUNT, menu_selection_);
 }
 
 void MenuScreen::update()
@@ -24,33 +24,30 @@ void MenuScreen::handleInput(InputEvent event)
 {
     if (event == InputEvent::ENCODER_UP)
     {
-        manager_->menu_selection = navigate(manager_->menu_selection, 5, true);
-        display.showMenu("NutriDose v1.0", MAIN_MENU_ITEMS, 5, manager_->menu_selection);
+        menu_selection_ = navigate(menu_selection_, MENU_ITEM_COUNT, true);
+        display.showMenu("NutriDose v1.0", MAIN_MENU_ITEMS, MENU_ITEM_COUNT, menu_selection_);
     }
     else if (event == InputEvent::ENCODER_DOWN)
     {
-        manager_->menu_selection = navigate(manager_->menu_selection, 5, false);
-        display.showMenu("NutriDose v1.0", MAIN_MENU_ITEMS, 5, manager_->menu_selection);
+        menu_selection_ = navigate(menu_selection_, MENU_ITEM_COUNT, false);
+        display.showMenu("NutriDose v1.0", MAIN_MENU_ITEMS, MENU_ITEM_COUNT, menu_selection_);
     }
     else if (event == InputEvent::BUTTON_CLICK)
     {
-        switch (manager_->menu_selection)
+        switch (menu_selection_)
         {
         case 0: // Manual Dose
-            manager_->dose_ctx.fertilizer_index = 0;
-            manager_->dose_ctx.nutrients_only = true;
+            // manager_->dose_ctx.fertilizer_index = 0;
+            // manager_->dose_ctx.nutrients_only = true;
             manager_->switchTo(ScreenType::DOSE_SELECT);
             break;
         case 1: // Profiles
-            manager_->returnToMain();
+            manager_->profile_ctx.selected_profile = 0;
+            manager_->switchTo(ScreenType::PROFILE_LIST);
             break;
         case 2: // Calibration
             manager_->cal_ctx.pump_index = 0;
             manager_->switchTo(ScreenType::CALIBRATION_SELECT);
-            break;
-        case 3: // Settings
-        case 4: // About
-            manager_->returnToMain();
             break;
         }
     }

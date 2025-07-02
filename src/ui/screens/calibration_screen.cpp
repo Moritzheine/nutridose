@@ -42,7 +42,6 @@ void CalibrationSelectScreen::handleInput(InputEvent event)
     else if (event == InputEvent::BUTTON_CLICK)
     {
         manager_->cal_ctx.start_time = millis();
-        pumpDriver.startPump(manager_->cal_ctx.pump_index);
         manager_->switchTo(ScreenType::CALIBRATION_RUN);
     }
     else if (event == InputEvent::BUTTON_HOLD)
@@ -55,12 +54,14 @@ void CalibrationSelectScreen::handleInput(InputEvent event)
 void CalibrationRunScreen::enter()
 {
     enter_time_ = millis();
+    pumpDriver.startPump(manager_->cal_ctx.pump_index);
 }
 
 void CalibrationRunScreen::update()
 {
-    uint32_t elapsed = millis() - manager_->cal_ctx.start_time;
-    uint32_t target_time = 50000; // 50 seconds for 50ml
+    uint32_t elapsed = millis() - enter_time_;
+
+    uint32_t target_time = calibration.calculatePumpTime(manager_->cal_ctx.pump_index, 50); // 50ml target
     uint8_t progress = (elapsed * 100) / target_time;
 
     if (progress > 100)
@@ -120,8 +121,11 @@ void CalibrationInputScreen::handleInput(InputEvent event)
     }
     else if (event == InputEvent::BUTTON_CLICK)
     {
+        // get previuous precision factor
+        float previous_factor = calibration.getCalibrationFactor(manager_->cal_ctx.pump_index);
+
         float factor = (float)manager_->cal_ctx.actual_volume / 50.0;
-        calibration.saveCalibration(manager_->cal_ctx.pump_index, factor);
+        calibration.saveCalibration(manager_->cal_ctx.pump_index, factor * previous_factor);
         manager_->switchTo(ScreenType::COMPLETE);
     }
     else if (event == InputEvent::BUTTON_HOLD)

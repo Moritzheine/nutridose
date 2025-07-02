@@ -6,14 +6,19 @@ Calibration calibration;
 
 void Calibration::begin()
 {
-    if (!LittleFS.begin())
+    if (!LittleFS.begin(false))
     {
-        Logger::error("LittleFS mount failed");
-        return;
+        Logger::error("LittleFS mount failed, trying to format");
+        if (!LittleFS.begin(true))
+        {
+            Logger::info("LittleFS format failed");
+            return;
+        }
+        Logger::info("LittleFS formatted successfully");
     }
+    Logger::info("LittleFS mounted successfully");
 
     loadFromStorage();
-    Logger::info("Calibration system initialized");
 }
 
 void Calibration::saveCalibration(uint8_t pump_id, float factor)
@@ -34,13 +39,13 @@ float Calibration::getCalibrationFactor(uint8_t pump_id)
     return pump_factors_[pump_id];
 }
 
-uint32_t Calibration::calculatePumpTime(uint8_t pump_id, uint8_t target_ml)
+uint32_t Calibration::calculatePumpTime(uint8_t pump_id, float target_ml)
 {
-    if (pump_id >= NUM_TOTAL_PUMPS)
+    if (pump_id >= NUM_TOTAL_PUMPS || target_ml <= 0)
         return 0;
 
     float factor = pump_factors_[pump_id];
-    uint32_t base_time = target_ml * DEFAULT_ML_PER_SEC;
+    uint32_t base_time = (uint32_t)(target_ml / DEFAULT_ML_PER_SEC) * 1000;
 
     return (uint32_t)(base_time / factor);
 }

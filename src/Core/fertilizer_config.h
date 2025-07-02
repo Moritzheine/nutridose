@@ -5,12 +5,12 @@
 // Fertilizer structure for clean configuration
 struct Fertilizer
 {
-    const char *name;        // Display name
-    const char *short_name;  // Short name for small displays
-    uint8_t pin;             // GPIO pin for pump
-    uint8_t default_dose_ml; // Default dosing amount
-    bool is_nutrient;        // true=fertilizer, false=water/pH
-    uint8_t pump_id;         // Pump index (0-4)
+    const char *name;       // Display name
+    const char *short_name; // Short name for small displays
+    uint8_t pin;            // GPIO pin for pump
+    float default_dose_ml;  // Default dosing amount (0.1ml precision)
+    bool is_nutrient;       // true=fertilizer, false=water/pH
+    uint8_t pump_id;        // Pump index (0-4)
 };
 
 class FertilizerConfig

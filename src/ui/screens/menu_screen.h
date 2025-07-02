@@ -3,6 +3,7 @@
 
 class MenuScreen : public BaseScreen
 {
+    uint8_t menu_selection_ = 0; // Current menu selection
 public:
     MenuScreen(ScreenManager *manager) : BaseScreen(manager) {}
 
